@@ -1,0 +1,48 @@
+object CompareSelectFrame: TCompareSelectFrame
+  Left = 0
+  Height = 302
+  Top = 0
+  Width = 489
+  ChildSizing.LeftRightSpacing = 8
+  ClientHeight = 302
+  ClientWidth = 489
+  OnResize = FrameResize
+  TabOrder = 0
+  DesignLeft = 426
+  DesignTop = 10
+  object CompareImage: TImage
+    Left = 8
+    Height = 252
+    Top = 50
+    Width = 473
+    Align = alClient
+    Center = True
+    Proportional = True
+    Stretch = True
+  end
+  object HeaderPanel: TPanel
+    Left = 8
+    Height = 50
+    Top = 0
+    Width = 473
+    Align = alTop
+    BevelOuter = bvSpace
+    ClientHeight = 50
+    ClientWidth = 473
+    TabOrder = 0
+    object HeaderLabel: TLabel
+      Left = 5
+      Height = 32
+      Hint = 'The FPC is the compiler, which translates your code into a runnable program.'#13#10'Newer language features require newer FPC versions'
+      Top = 11
+      Width = 101
+      Caption = 'Headline'
+      Font.Height = -24
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+    end
+  end
+end

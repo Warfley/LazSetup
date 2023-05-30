@@ -1,0 +1,102 @@
+object ProgressFrame: TProgressFrame
+  Left = 0
+  Height = 348
+  Top = 0
+  Width = 662
+  ClientHeight = 348
+  ClientWidth = 662
+  Color = clDefault
+  DesignTimePPI = 144
+  OnResize = FrameResize
+  ParentBackground = False
+  ParentColor = False
+  ParentFont = False
+  TabOrder = 0
+  DesignLeft = 215
+  DesignTop = 179
+  object HeadlineLabel: TLabel
+    Left = 0
+    Height = 37
+    Top = 8
+    Width = 275
+    Caption = 'Overall Job Description'
+    Font.Height = -27
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 0
+    Height = 32
+    Top = 72
+    Width = 52
+    Caption = 'Step:'
+    Font.Height = -24
+    ParentColor = False
+    ParentFont = False
+  end
+  object StepNumberLabel: TLabel
+    Left = 96
+    Height = 32
+    Top = 72
+    Width = 61
+    Caption = '10/10'
+    Font.Height = -24
+    ParentColor = False
+    ParentFont = False
+  end
+  object StepNameLabel: TLabel
+    Left = 192
+    Height = 32
+    Top = 72
+    Width = 246
+    Caption = 'Step Name Descritpion'
+    Font.Height = -24
+    ParentColor = False
+    ParentFont = False
+  end
+  object JobProgressBar: TProgressBar
+    Left = 8
+    Height = 30
+    Top = 144
+    Width = 646
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 0
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 116
+    Top = 232
+    Width = 662
+    Align = alBottom
+    BevelOuter = bvSpace
+    ClientHeight = 116
+    ClientWidth = 662
+    Color = clMenu
+    ParentColor = False
+    TabOrder = 1
+    object OutputReportMemo: TMemo
+      Left = 1
+      Height = 88
+      Top = 27
+      Width = 660
+      Align = alClient
+      Lines.Strings = (
+        'OutputReportMemo'
+      )
+      ReadOnly = True
+      ScrollBars = ssAutoVertical
+      TabOrder = 0
+      Visible = False
+    end
+    object LastOutputLabel: TLabel
+      Left = 1
+      Height = 26
+      Top = 1
+      Width = 660
+      Align = alTop
+      AutoSize = False
+      ParentColor = False
+      OnClick = LastOutputLabelClick
+    end
+  end
+end
