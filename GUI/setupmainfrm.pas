@@ -368,13 +368,14 @@ begin
   LazVersionOutLines := LazVersionOut.Trim.Split([LineEnding]);
   LazVersionString := LazVersionOutLines[High(LazVersionOutLines)];
 
-  VersionRegex := TRegexpr.Create('(\d+).(\d+).(\d+)');
+  VersionRegex := TRegexpr.Create('(\d+).(\d+)(.(\d+))?');
   try
     if not VersionRegex.Exec(LazVersionString) then
       Exit;
     Version := BuildVersion(StrToInt(VersionRegex.Match[1]),
                             StrToInt(VersionRegex.Match[2]),
-                            StrToInt(VersionRegex.Match[3]));
+                            StrToIntDef(VersionRegex.Match[4],0),
+                            False);
   finally
     VersionRegex.Free;
   end;

@@ -16,6 +16,7 @@ type
 
   TBuildVersion = record
     Major, Minor, Patch: Integer;
+    isRC: Boolean;
 
     class operator <(const lhs, rhs: TBuildVersion): Boolean; inline;
     function ToString: String;
@@ -43,7 +44,7 @@ const
   TagsUrl = '/repository/tags';
   ArchiveURL = '/repository/archive.zip';
 
-function BuildVersion(Major, Minor, Patch: Integer): TBuildVersion; inline;
+function BuildVersion(Major, Minor, Patch: Integer; IsRC: Boolean): TBuildVersion; inline;
 
 
 function MainBranch: TBranchVersion;
@@ -55,11 +56,12 @@ procedure SortVersions(var Versions: TBranchVersions);
 function FindOrInsertSorted(NewVersion: TBranchVersion; var Versions: TBranchVersions): SizeInt;
 implementation
 
-function BuildVersion(Major, Minor, Patch: Integer): TBuildVersion;
+function BuildVersion(Major, Minor, Patch: Integer; IsRC: Boolean): TBuildVersion;
 begin
   Result.Major := Major;
   Result.Minor := Minor;
   Result.Patch := Patch;
+  Result.isRC := IsRC;
 end;
 
 
@@ -74,8 +76,10 @@ function TBuildVersion.ToString: String;
 begin
   if (Major = 999) and (Minor = 999) and (Patch = 999) then
     Result := 'Experimental'
+  else if not isRC then
+    Result := '%d.%d.%d'.Format([Major, Minor, Patch])
   else
-    Result := '%d.%d.%d'.Format([Major, Minor, Patch]);
+    Result := '%d.%d RC %d'.Format([Major, Minor, Patch]);
 end;
 
 function ParseTagVersion(const TagPrefix: String; TagJson: TJSONObject;
@@ -84,15 +88,22 @@ var
   BranchRegex: TRegExpr;
 begin
   Result := True;
-  BranchRegex := TRegExpr.Create(TagPrefix + '_(\d+)_(\d+)_(\d+)');
+  BranchRegex := TRegExpr.Create(TagPrefix + '_(\d+)_(\d+)(_(\d+)|_RC_(\d+))?');
   try
     BranchVersion.BranchName := TagJson.Get('name', '');
     if (not BranchRegex.Exec(BranchVersion.BranchName)) or
        (BranchRegex.MatchLen[0] <> BranchVersion.BranchName.Length) then
       Exit(False);
-    BranchVersion.Version := BuildVersion(StrToInt(BranchRegex.Match[1]),
-                                          StrToInt(BranchRegex.Match[2]),
-                                          StrToInt(BranchRegex.Match[3]));
+    if BranchRegex.Match[5].IsEmpty then
+      BranchVersion.Version := BuildVersion(StrToInt(BranchRegex.Match[1]),
+                                            StrToInt(BranchRegex.Match[2]),
+                                            StrToIntDef(BranchRegex.Match[4],0),
+                                            False)
+    else
+      BranchVersion.Version := BuildVersion(StrToInt(BranchRegex.Match[1]),
+                                            StrToInt(BranchRegex.Match[2]),
+                                            StrToInt(BranchRegex.Match[5]),
+                                            True);
     BranchVersion.isTag := True;
     BranchVersion.CommitID := TagJson.Get('target', '');
     if BranchVersion.CommitID.IsEmpty then
@@ -104,7 +115,7 @@ end;
 
 function MainBranch: TBranchVersion;
 begin
-  Result.Version := BuildVersion(999, 999, 999); 
+  Result.Version := BuildVersion(999, 999, 999, False);
   Result.BranchName := 'main';
   Result.CommitID := 'main';
   Result.isTag := False;

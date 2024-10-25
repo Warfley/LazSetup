@@ -122,7 +122,7 @@ function ParseVersionNode(VersionNode: TDOMNode): TBuildVersion;
 var
   MajorNode, MinorNode, BuildNode: TDOMNode;
 begin
-  Result := BuildVersion(0, 0, 0);
+  Result := BuildVersion(0, 0, 0, False);
   MajorNode := VersionNode.Attributes.GetNamedItem('Major');
   if Assigned(MajorNode) then
     Result.Major := AnsiString(MajorNode.NodeValue).ToInteger;
